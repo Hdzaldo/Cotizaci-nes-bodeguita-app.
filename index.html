@@ -3,54 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador Web</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Cotización</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        .hidden {
+            display: none;
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .form-section textarea {
+            resize: vertical;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 18px;
+                text-align: center;
+            }
+            .form-section label {
+                font-size: 14px;
+            }
+            .form-section input, .form-section textarea, button {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-    <h1>Cotizador de Productos</h1>
-
+    <h1>Generador de Cotización</h1>
+    
+    <!-- Formulario para ingresar los datos de la cotización -->
     <div id="formulario">
-        <h2>Datos del Cliente</h2>
-        
-        <label for="cliente">Nombre del cliente (opcional):</label>
-        <input type="text" id="cliente" placeholder="Nombre del cliente"><br>
+        <div class="form-section">
+            <label for="nombre-cotizacion">Nombre de la Cotización:</label>
+            <input type="text" id="nombre-cotizacion" placeholder="Nombre de la cotización">
+        </div>
 
-        <label for="rfc">RFC (opcional):</label>
-        <input type="text" id="rfc" placeholder="RFC del cliente"><br>
+        <div class="form-section">
+            <label for="cliente">Nombre del Cliente:</label>
+            <input type="text" id="cliente" placeholder="Nombre del cliente">
+        </div>
 
-        <label for="telefono">Teléfono (opcional):</label>
-        <input type="text" id="telefono" placeholder="Teléfono del cliente"><br>
+        <div class="form-section">
+            <label for="rfc">RFC:</label>
+            <input type="text" id="rfc" placeholder="RFC">
+        </div>
 
-        <label for="email">Correo electrónico (opcional):</label>
-        <input type="email" id="email" placeholder="Correo del cliente"><br>
+        <div class="form-section">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" placeholder="Teléfono">
+        </div>
 
-        <h2>Productos</h2>
-        <label for="producto">Producto:</label>
-        <input type="text" id="producto" placeholder="Producto o concepto"><br>
+        <div class="form-section">
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Email">
+        </div>
 
-        <label for="cantidad">Cantidad:</label>
-        <input type="number" id="cantidad" value="1" min="1"><br>
+        <div class="form-section">
+            <label for="producto">Producto:</label>
+            <input type="text" id="producto" placeholder="Nombre del producto">
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" id="cantidad" value="1" min="1">
+            <label for="precio">Precio Unitario:</label>
+            <input type="number" id="precio" value="0" min="0">
+            <button onclick="agregarProducto()">Agregar Producto</button>
+        </div>
 
-        <label for="precio">Precio unitario:</label>
-        <input type="number" id="precio" value="0" step="0.01"><br>
+        <div class="form-section">
+            <label for="comentarios">Comentarios:</label>
+            <textarea id="comentarios" placeholder="Comentarios adicionales"></textarea>
+        </div>
 
-        <button type="button" onclick="agregarProducto()">Agregar Producto</button>
-        
-        <h2>Comentarios (opcional)</h2>
-        <textarea id="comentarios" placeholder="Comentarios adicionales"></textarea><br>
-
-        <button type="button" onclick="finalizarCotizacion()">Finalizar Cotización</button>
+        <button onclick="finalizarCotizacion()">Finalizar Cotización</button>
     </div>
 
-    <div id="vista-previa" style="display: none;">
+    <!-- Vista previa de la cotización -->
+    <div id="vista-previa" class="hidden">
         <h2>Vista Previa de la Cotización</h2>
-        <p><strong>Datos del Cliente:</strong> <span id="vista-cliente"></span></p>
-        <p><strong>Productos:</strong> <span id="vista-productos"></span></p>
+        <p><strong>Nombre Cotización:</strong> <span id="vista-nombre-cotizacion"></span></p>
+        <p><strong>Cliente:</strong> <span id="vista-cliente"></span></p>
+        <p><strong>RFC:</strong> <span id="vista-rfc"></span></p>
+        <p><strong>Teléfono:</strong> <span id="vista-telefono"></span></p>
+        <p><strong>Email:</strong> <span id="vista-email"></span></p>
+
+        <h3>Productos</h3>
+        <div id="vista-productos"></div>
+
         <p><strong>Comentarios:</strong> <span id="vista-comentarios"></span></p>
+
         <button onclick="guardarCotizacion()">Guardar Cotización</button>
+        <button onclick="exportarPDF()">Exportar a PDF</button>
+        <button onclick="exportarJPG()">Exportar a JPG</button>
     </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script>
+        let cotizacion = {
+            nombre: '',
+            cliente: '',
+            rfc: '',
+            telefono: '',
+            email: '',
+            productos: [],
+            comentarios: ''
+        };
+
+        // Agregar producto
+        function agregarProducto() {
+            const producto = document.getElementById("producto").value;
+            const cantidad = document.getElementById("cantidad").value;
+            const precio = document.getElementById("precio").value;
+
+            if (producto && cantidad > 0 && precio > 0) {
+                const total = cantidad * precio;
+                cotizacion.productos.push({ producto, cantidad, precio, total });
+
+                document.getElementById("producto").value = '';
+                document.getElementById("cantidad").value = 1;
+                document.getElementById("precio").value = 0;
+
+                alert("Producto agregado.");
+            } else {
+                alert("Por favor, ingresa datos válidos para el producto.");
+            }
+        }
+
+        // Finalizar cotización
+        function finalizarCotizacion() {
+            cotizacion.nombre = document.getElementById("nombre-cotizacion").value || 'Sin nombre';
+            cotizacion.cliente = document.getElementById("cliente").value || 'No proporcionado';
+            cotizacion.rfc = document.getElementById("rfc").value || 'No proporcionado';
+            cotizacion.telefono = document.getElementById("telefono").value || 'No proporcionado';
+            cotizacion.email = document.getElementById("email").value || 'No proporcionado';
+            cotizacion.comentarios = document.getElementById("comentarios").value || 'No hay comentarios adicionales';
+
+            mostrarVistaPrevia();
+        }
+
+        // Mostrar vista previa
+        function mostrarVistaPrevia() {
+            document.getElementById("formulario").classList.add("hidden");
+            document.getElementById("vista-previa").classList.remove("hidden");
+
+            document.getElementById("
