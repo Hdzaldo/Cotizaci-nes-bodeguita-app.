@@ -1,172 +1,141 @@
-/* Reset de márgenes y rellenos */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Estilo general del cuerpo */
+/* Estilos generales */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
     color: #333;
 }
 
-/* Título principal */
 h1 {
     text-align: center;
-    font-size: 2rem;
-    margin-bottom: 30px;
-}
-
-/* Formulario principal */
-#formulario {
-    background-color: white;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    background-color: #3E8E41;
+    color: white;
+    margin: 0;
 }
 
-/* Sección de cada campo del formulario */
-.form-section {
-    margin-bottom: 15px;
+h3, h2 {
+    text-align: center;
 }
 
-.form-section label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.form-section input, .form-section textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.form-section textarea {
-    height: 80px;
-}
-
-/* Botón de agregar producto */
 button {
-    background-color: #4CAF50;
+    background-color: #3E8E41;
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
     cursor: pointer;
+    font-size: 16px;
     margin-top: 10px;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
-/* Estilo para la vista previa de la cotización */
-#vista-previa {
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+#formulario {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-section {
+    margin-bottom: 20px;
+}
+
+#productos-agregados p {
+    font-size: 14px;
+    color: #333;
+}
+
+.hidden {
     display: none;
+}
+
+/* Estilos para la vista previa de la cotización */
+#vista-previa {
+    width: 90%;
+    margin: 20px auto;
     background-color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-#vista-previa h2 {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .factura-header {
     display: flex;
     justify-content: space-between;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
     margin-bottom: 20px;
 }
 
 .business-name {
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: bold;
-    color: #4CAF50;
-}
-
-.cliente-datos {
-    text-align: left;
-    font-size: 1rem;
+    color: #3E8E41;
 }
 
 .cliente-datos p {
     margin: 5px 0;
 }
 
-h3 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+#vista-productos {
+    margin-bottom: 20px;
 }
 
 #vista-productos p {
-    margin-bottom: 5px;
-    font-size: 1rem;
+    font-size: 14px;
 }
 
 #total-sin-iva {
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 18px;
 }
 
-button {
-    margin: 10px 0;
-}
-
-/* Media Queries para pantallas pequeñas */
-@media (max-width: 768px) {
-    #formulario {
+@media (max-width: 600px) {
+    #formulario, #vista-previa {
+        width: 100%;
         padding: 10px;
     }
 
-    h1 {
-        font-size: 1.5rem;
+    button {
+        padding: 8px 15px;
     }
 
-    .form-section {
-        margin-bottom: 12px;
-    }
-
-    .form-section input, .form-section textarea {
-        font-size: 0.9rem;
+    input, textarea {
+        font-size: 14px;
     }
 
     .factura-header {
         flex-direction: column;
-        align-items: flex-start;
+        text-align: center;
     }
 
     .business-name {
-        font-size: 1.2rem;
+        margin-bottom: 10px;
     }
 
     .cliente-datos p {
-        font-size: 0.9rem;
-    }
-
-    #vista-previa h2 {
-        font-size: 1.5rem;
-    }
-
-    h3 {
-        font-size: 1rem;
-    }
-
-    #vista-productos p {
-        font-size: 0.9rem;
-    }
-
-    #total-sin-iva {
-        font-size: 1rem;
+        text-align: left;
     }
 }
