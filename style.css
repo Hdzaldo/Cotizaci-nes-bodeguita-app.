@@ -1,46 +1,65 @@
-body {
-    font-family: Arial, sans-serif;
+/* Reset de márgenes y rellenos */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-h1.title {
-    text-align: center;
-    margin-top: 20px;
-}
-
-#formulario {
-    max-width: 600px;
-    margin: 0 auto;
+/* Estilo general del cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
     padding: 20px;
-    border: 1px solid #ccc;
+    color: #333;
+}
+
+/* Título principal */
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+/* Formulario principal */
+#formulario {
+    background-color: white;
+    padding: 20px;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
+/* Sección de cada campo del formulario */
 .form-section {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-label {
+.form-section label {
+    display: block;
     font-weight: bold;
+    margin-bottom: 5px;
 }
 
-input, textarea {
+.form-section input, .form-section textarea {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 1rem;
 }
 
+.form-section textarea {
+    height: 80px;
+}
+
+/* Botón de agregar producto */
 button {
-    padding: 10px 15px;
     background-color: #4CAF50;
     color: white;
+    padding: 10px 20px;
     border: none;
     border-radius: 4px;
+    font-size: 1rem;
     cursor: pointer;
     margin-top: 10px;
 }
@@ -49,26 +68,105 @@ button:hover {
     background-color: #45a049;
 }
 
-.hidden {
-    display: none;
-}
-
+/* Estilo para la vista previa de la cotización */
 #vista-previa {
-    margin: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    display: none;
+    background-color: white;
     padding: 20px;
-    border: 1px solid #ccc;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #vista-previa h2 {
     text-align: center;
+    font-size: 2rem;
     margin-bottom: 20px;
 }
 
-#vista-previa p {
-    font-size: 16px;
+.factura-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.business-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.cliente-datos {
+    text-align: left;
+    font-size: 1rem;
+}
+
+.cliente-datos p {
+    margin: 5px 0;
+}
+
+h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+#vista-productos p {
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+#total-sin-iva {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+button {
     margin: 10px 0;
+}
+
+/* Media Queries para pantallas pequeñas */
+@media (max-width: 768px) {
+    #formulario {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-section {
+        margin-bottom: 12px;
+    }
+
+    .form-section input, .form-section textarea {
+        font-size: 0.9rem;
+    }
+
+    .factura-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .business-name {
+        font-size: 1.2rem;
+    }
+
+    .cliente-datos p {
+        font-size: 0.9rem;
+    }
+
+    #vista-previa h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    #vista-productos p {
+        font-size: 0.9rem;
+    }
+
+    #total-sin-iva {
+        font-size: 1rem;
+    }
 }
