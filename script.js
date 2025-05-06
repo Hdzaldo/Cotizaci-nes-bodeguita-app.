@@ -58,9 +58,51 @@ function mostrarVistaPrevia() {
     document.getElementById("vista-comentarios").textContent = cotizacion.comentarios;
 }
 
-// Guardar cotización (en consola o en almacenamiento)
+// Guardar cotización
 function guardarCotizacion() {
-    console.log("Cotización guardada:", cotizacion);
+    const cotizacionesGuardadas = JSON.parse(localStorage.getItem("cotizaciones")) || [];
+
+    // Agregar la cotización actual al array de cotizaciones guardadas
+    cotizacionesGuardadas.push(cotizacion);
+
+    // Guardar el array de cotizaciones en el localStorage
+    localStorage.setItem("cotizaciones", JSON.stringify(cotizacionesGuardadas));
+
     alert("Cotización guardada exitosamente.");
-    // Aquí podrías guardar la cotización en un archivo, base de datos, o localStorage
+
+    // Limpiar el formulario para nueva cotización
+    resetFormulario();
+}
+
+// Limpiar formulario y datos
+function resetFormulario() {
+    cotizacion = {
+        cliente: '',
+        rfc: '',
+        telefono: '',
+        email: '',
+        productos: [],
+        comentarios: ''
+    };
+
+    document.getElementById("cliente").value = '';
+    document.getElementById("rfc").value = '';
+    document.getElementById("telefono").value = '';
+    document.getElementById("email").value = '';
+    document.getElementById("producto").value = '';
+    document.getElementById("cantidad").value = 1;
+    document.getElementById("precio").value = 0;
+    document.getElementById("comentarios").value = '';
+
+    document.getElementById("formulario").style.display = "block";
+    document.getElementById("vista-previa").style.display = "none";
+}
+
+// Recuperar cotizaciones guardadas
+function cargarCotizacionesGuardadas() {
+    const cotizacionesGuardadas = JSON.parse(localStorage.getItem("cotizaciones")) || [];
+
+    cotizacionesGuardadas.forEach((cotizacion, index) => {
+        console.log(`Cotización ${index + 1}:`, cotizacion);
+    });
 }
