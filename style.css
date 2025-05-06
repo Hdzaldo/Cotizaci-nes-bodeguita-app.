@@ -62,6 +62,7 @@ button:hover {
 
 #datos-cliente p {
     margin: 5px 0;
+    text-align: justify;  /* Justificado de los datos */
 }
 
 #vista-productos p {
