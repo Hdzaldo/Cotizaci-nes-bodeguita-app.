@@ -1,44 +1,32 @@
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
+    margin: 0;
+    background-color: #f9f9f9;
 }
 
-h1 {
-    text-align: center;
+.hidden {
+    display: none;
 }
 
-form {
+.form-section {
     margin-bottom: 20px;
 }
 
 label {
-    margin-top: 10px;
-    display: block;
+    margin-right: 10px;
+    font-weight: bold;
 }
 
-input, textarea {
+input, textarea, button {
     width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    font-size: 16px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
-}
-
-th, td {
     padding: 10px;
-    text-align: center;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 button {
-    padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -50,17 +38,26 @@ button:hover {
     background-color: #45a049;
 }
 
-#vista-previa {
-    background-color: #f4f4f4;
-    padding: 20px;
-    border: 1px solid #ddd;
+.form-section textarea {
+    resize: vertical;
 }
 
-textarea {
-    height: 100px;
-}
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
 
-#cotizaciones-guardadas {
-    list-style-type: none;
-    padding: 0;
+    h1 {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .form-section label {
+        font-size: 14px;
+    }
+
+    .form-section input, .form-section textarea, button {
+        font-size: 14px;
+        padding: 12px;
+    }
 }
