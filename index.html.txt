@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Generador de Cotizaciones</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Generador de Cotizaciones</h1>
+
+    <section class="section">
+      <h2>Datos del Cliente</h2>
+      <label>Nombre: <input type="text" id="nombreCliente" /></label>
+      <label>RFC: <input type="text" id="rfcCliente" /></label>
+      <label>Teléfono: <input type="tel" id="telefonoCliente" /></label>
+      <label>Email: <input type="email" id="emailCliente" /></label>
+      <label>Fecha: <input type="date" id="fechaCotizacion" /></label>
+    </section>
+
+    <section class="section">
+      <h2>Productos</h2>
+      <div id="productos"></div>
+      <button onclick="agregarProducto()">+ Agregar producto</button>
+    </section>
+
+    <section class="section">
+      <label><input type="checkbox" id="incluirIVA" /> Incluir IVA (16%)</label>
+    </section>
+
+    <section class="section">
+      <h2>Total: <span id="total">0.00</span> MXN</h2>
+    </section>
+
+    <section class="section">
+      <label for="formatoExportacion">Formato:</label>
+      <select id="formatoExportacion">
+        <option value="pdf">PDF</option>
+        <option value="jpg">JPG</option>
+      </select>
+      <br /><br />
+      <button onclick="generarCotizacion()">Generar Cotización</button>
+    </section>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
