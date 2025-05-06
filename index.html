@@ -10,29 +10,45 @@
 
     <h1>Cotizador de Productos</h1>
 
-    <div id="datos-cliente">
+    <div id="formulario">
         <h2>Datos del Cliente</h2>
-        <label for="cliente">Nombre del cliente:</label>
-        <input type="text" id="cliente" placeholder="Nombre del cliente" required><br>
+        
+        <label for="cliente">Nombre del cliente (opcional):</label>
+        <input type="text" id="cliente" placeholder="Nombre del cliente"><br>
 
-        <label for="rfc">RFC:</label>
+        <label for="rfc">RFC (opcional):</label>
         <input type="text" id="rfc" placeholder="RFC del cliente"><br>
 
-        <label for="telefono">Teléfono:</label>
+        <label for="telefono">Teléfono (opcional):</label>
         <input type="text" id="telefono" placeholder="Teléfono del cliente"><br>
 
-        <label for="email">Correo electrónico:</label>
+        <label for="email">Correo electrónico (opcional):</label>
         <input type="email" id="email" placeholder="Correo del cliente"><br>
 
-        <button type="button" onclick="guardarDatosCliente()">Guardar Datos del Cliente</button>
+        <h2>Productos</h2>
+        <label for="producto">Producto:</label>
+        <input type="text" id="producto" placeholder="Producto o concepto"><br>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" value="1" min="1"><br>
+
+        <label for="precio">Precio unitario:</label>
+        <input type="number" id="precio" value="0" step="0.01"><br>
+
+        <button type="button" onclick="agregarProducto()">Agregar Producto</button>
+        
+        <h2>Comentarios (opcional)</h2>
+        <textarea id="comentarios" placeholder="Comentarios adicionales"></textarea><br>
+
+        <button type="button" onclick="finalizarCotizacion()">Finalizar Cotización</button>
     </div>
 
-    <div id="productos" style="display: none;">
-        <!-- Aquí se cargarán los productos -->
-    </div>
-
-    <div id="comentarios" style="display: none;">
-        <!-- Aquí se agregan los comentarios -->
+    <div id="vista-previa" style="display: none;">
+        <h2>Vista Previa de la Cotización</h2>
+        <p><strong>Datos del Cliente:</strong> <span id="vista-cliente"></span></p>
+        <p><strong>Productos:</strong> <span id="vista-productos"></span></p>
+        <p><strong>Comentarios:</strong> <span id="vista-comentarios"></span></p>
+        <button onclick="guardarCotizacion()">Guardar Cotización</button>
     </div>
 
     <script src="script.js"></script>
