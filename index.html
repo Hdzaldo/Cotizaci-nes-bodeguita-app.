@@ -54,6 +54,11 @@
 
         <button onclick="agregarProducto()">Agregar Producto</button>
 
+        <h3>Productos Agregados</h3>
+        <div id="productos-agregados">
+            <!-- Aquí se mostrarán los productos agregados -->
+        </div>
+
         <div class="form-section">
             <label for="comentarios">Comentarios</label>
             <textarea id="comentarios" placeholder="Comentarios adicionales"></textarea>
@@ -63,11 +68,10 @@
     </div>
 
     <div id="vista-previa" class="hidden">
-        <h2>Cotización</h2>
+        <h2>Vista Previa de la Cotización</h2>
         <div class="factura-header">
             <div class="business-name">La Bodeguita 1810</div>
             <div class="cliente-datos">
-                <p><strong>Nombre de la cotización:</strong> <span id="vista-nombre-cotizacion"></span></p>
                 <p><strong>Cliente:</strong> <span id="vista-cliente"></span></p>
                 <p><strong>RFC:</strong> <span id="vista-rfc"></span></p>
                 <p><strong>Teléfono:</strong> <span id="vista-telefono"></span></p>
@@ -121,7 +125,7 @@
         }
 
         function actualizarVistaProductos() {
-            const vistaProductos = document.getElementById("vista-productos");
+            const vistaProductos = document.getElementById("productos-agregados");
             vistaProductos.innerHTML = '';
             cotizacion.productos.forEach((prod, i) => {
                 const p = document.createElement('p');
@@ -149,7 +153,6 @@
             document.getElementById("formulario").classList.add("hidden");
             document.getElementById("vista-previa").classList.remove("hidden");
 
-            document.getElementById("vista-nombre-cotizacion").textContent = cotizacion.nombre;
             document.getElementById("vista-cliente").textContent = cotizacion.cliente;
             document.getElementById("vista-rfc").textContent = cotizacion.rfc;
             document.getElementById("vista-telefono").textContent = cotizacion.telefono;
