@@ -7,116 +7,11 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .form-section {
-            margin-bottom: 15px;
-        }
-
-        .form-section label {
-            display: block;
-            font-weight: bold;
-        }
-
-        .form-section input,
-        .form-section textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-section button {
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .form-section button:hover {
-            background-color: #218838;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        #vista-previa {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .factura-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .factura-header h2 {
-            margin: 0;
-        }
-
-        .factura-header p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .business-name {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        table, th, td {
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 8px;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .total {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .total-container {
-            text-align: right;
-        }
-
-        .comentarios {
-            margin-top: 20px;
-            font-size: 14px;
-        }
-    </style>
 </head>
 <body>
     <h1>Cotizador de Productos</h1>
 
     <div id="formulario">
-        <!-- Formulario para datos de la cotización -->
         <div class="form-section">
             <label for="nombre-cotizacion">Nombre de la Cotización</label>
             <input type="text" id="nombre-cotizacion" placeholder="Ej. Cotización Julio 2025">
@@ -168,36 +63,24 @@
     </div>
 
     <div id="vista-previa" class="hidden">
+        <h2>Cotización</h2>
         <div class="factura-header">
             <div class="business-name">La Bodeguita 1810</div>
-            <h2>Cotización</h2>
-            <p><strong>Nombre de la cotización:</strong> <span id="vista-nombre-cotizacion"></span></p>
-            <p><strong>Cliente:</strong> <span id="vista-cliente"></span></p>
-            <p><strong>RFC:</strong> <span id="vista-rfc"></span></p>
-            <p><strong>Teléfono:</strong> <span id="vista-telefono"></span></p>
-            <p><strong>Email:</strong> <span id="vista-email"></span></p>
+            <div class="cliente-datos">
+                <p><strong>Nombre de la cotización:</strong> <span id="vista-nombre-cotizacion"></span></p>
+                <p><strong>Cliente:</strong> <span id="vista-cliente"></span></p>
+                <p><strong>RFC:</strong> <span id="vista-rfc"></span></p>
+                <p><strong>Teléfono:</strong> <span id="vista-telefono"></span></p>
+                <p><strong>Email:</strong> <span id="vista-email"></span></p>
+            </div>
         </div>
 
         <h3>Productos</h3>
-        <table id="vista-productos">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div id="vista-productos"></div>
 
-        <div class="total-container">
-            <p class="total"><strong>Total:</strong> $<span id="total-sin-iva"></span></p>
-        </div>
+        <p><strong>Total:</strong> $<span id="total-sin-iva"></span></p>
 
-        <div class="comentarios">
-            <p><strong>Comentarios:</strong> <span id="vista-comentarios"></span></p>
-        </div>
+        <p><strong>Comentarios:</strong> <span id="vista-comentarios"></span></p>
 
         <button onclick="guardarCotizacion()">Guardar Cotización</button>
         <button onclick="exportarPDF()">Exportar a PDF</button>
@@ -226,29 +109,25 @@
                 const total = cantidad * precio;
                 cotizacion.productos.push({ producto, cantidad, precio, total });
 
-                // Limpiar campos del formulario
                 document.getElementById("producto").value = '';
                 document.getElementById("cantidad").value = 1;
                 document.getElementById("precio").value = 0;
 
-                // Actualizar la vista de productos
                 actualizarVistaProductos();
+                alert("Producto agregado.");
             } else {
                 alert("Por favor, ingresa datos válidos para el producto.");
             }
         }
 
         function actualizarVistaProductos() {
-            const vistaProductos = document.getElementById("vista-productos").getElementsByTagName("tbody")[0];
+            const vistaProductos = document.getElementById("vista-productos");
             vistaProductos.innerHTML = '';
-            cotizacion.productos.forEach((prod) => {
-                const row = vistaProductos.insertRow();
-                row.insertCell(0).textContent = prod.producto;
-                row.insertCell(1).textContent = prod.cantidad;
-                row.insertCell(2).textContent = `$${prod.precio.toFixed(2)}`;
-                row.insertCell(3).textContent = `$${prod.total.toFixed(2)}`;
+            cotizacion.productos.forEach((prod, i) => {
+                const p = document.createElement('p');
+                p.textContent = `${prod.producto} - ${prod.cantidad} x $${prod.precio.toFixed(2)} = $${prod.total.toFixed(2)}`;
+                vistaProductos.appendChild(p);
             });
-            calcularTotales();
         }
 
         function calcularTotales() {
@@ -265,7 +144,11 @@
             cotizacion.email = document.getElementById("email").value || 'No proporcionado';
             cotizacion.comentarios = document.getElementById("comentarios").value || 'No hay comentarios adicionales';
 
-            // Actualizar la vista previa
+            calcularTotales();
+
+            document.getElementById("formulario").classList.add("hidden");
+            document.getElementById("vista-previa").classList.remove("hidden");
+
             document.getElementById("vista-nombre-cotizacion").textContent = cotizacion.nombre;
             document.getElementById("vista-cliente").textContent = cotizacion.cliente;
             document.getElementById("vista-rfc").textContent = cotizacion.rfc;
@@ -273,11 +156,6 @@
             document.getElementById("vista-email").textContent = cotizacion.email;
             document.getElementById("vista-comentarios").textContent = cotizacion.comentarios;
 
-            // Ocultar el formulario y mostrar la vista previa
-            document.getElementById("formulario").classList.add("hidden");
-            document.getElementById("vista-previa").classList.remove("hidden");
-
-            // Actualizar productos
             actualizarVistaProductos();
         }
 
