@@ -1,68 +1,38 @@
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    margin: 0;
-    background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 700px;
+  margin: auto;
 }
 
-.hidden {
-    display: none;
-}
-
-h1 {
-    text-align: center;
-    font-size: 24px;
-}
-
-.form-section {
-    margin-bottom: 20px;
-}
-
-label {
-    margin-right: 10px;
-    font-weight: bold;
-}
-
-input, textarea, button {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+input, textarea {
+  display: block;
+  width: 100%;
+  margin: 5px 0 15px;
+  padding: 10px;
+  font-size: 16px;
 }
 
 button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
+  margin: 10px 5px 20px 0;
+  padding: 10px 20px;
+  font-size: 16px;
 }
 
-button:hover {
-    background-color: #45a049;
+hr {
+  margin: 20px 0;
 }
 
-.form-section textarea {
-    resize: vertical;
+.producto {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
+.producto input {
+  flex: 1;
+}
 
-    h1 {
-        font-size: 18px;
-        text-align: center;
-    }
-
-    .form-section label {
-        font-size: 14px;
-    }
-
-    .form-section input, .form-section textarea, button {
-        font-size: 14px;
-        padding: 12px;
-    }
+.hidden {
+  display: none;
 }
