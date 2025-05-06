@@ -1,91 +1,66 @@
-let datosCliente = {};
+let cotizacion = {
+    cliente: '',
+    rfc: '',
+    telefono: '',
+    email: '',
+    productos: [],
+    comentarios: ''
+};
 
-function guardarDatosCliente() {
-    const cliente = document.getElementById("cliente").value;
-    const rfc = document.getElementById("rfc").value;
-    const telefono = document.getElementById("telefono").value;
-    const email = document.getElementById("email").value;
-
-    // Guardar datos del cliente en el objeto
-    datosCliente = {
-        cliente,
-        rfc,
-        telefono,
-        email
-    };
-
-    if (cliente && rfc && telefono && email) {
-        // Ocultar sección de datos del cliente y mostrar los productos
-        document.getElementById("datos-cliente").style.display = "none";
-        document.getElementById("productos").style.display = "block";
-        mostrarFormularioProductos();
-    } else {
-        alert("Por favor, completa todos los campos del cliente.");
-    }
-}
-
-function mostrarFormularioProductos() {
-    const productosHTML = `
-        <h2>Agregar Productos</h2>
-        <label for="producto">Producto:</label>
-        <input type="text" id="producto" placeholder="Producto o concepto" required><br>
-
-        <label for="cantidad">Cantidad:</label>
-        <input type="number" id="cantidad" value="1" min="1" required><br>
-
-        <label for="precio">Precio unitario:</label>
-        <input type="number" id="precio" value="0" step="0.01" required><br>
-
-        <button type="button" onclick="agregarProducto()">Agregar producto</button>
-        <button type="button" onclick="guardarProductos()">Guardar Productos</button>
-    `;
-
-    document.getElementById("productos").innerHTML = productosHTML;
-}
-
+// Agregar producto
 function agregarProducto() {
     const producto = document.getElementById("producto").value;
     const cantidad = document.getElementById("cantidad").value;
     const precio = document.getElementById("precio").value;
 
     if (producto && cantidad > 0 && precio > 0) {
-        // Guardar el producto y mostrar el resumen
+        // Guardar el producto y mostrarlo
         const total = cantidad * precio;
-        const productoHTML = `
-            <p>${producto} - ${cantidad} x $${precio} = $${total}</p>
-        `;
-        document.getElementById("productos").innerHTML += productoHTML;
+        cotizacion.productos.push({ producto, cantidad, precio, total });
+
+        // Limpiar campos de producto
+        document.getElementById("producto").value = '';
+        document.getElementById("cantidad").value = 1;
+        document.getElementById("precio").value = 0;
+
+        alert("Producto agregado.");
     } else {
         alert("Por favor, ingresa datos válidos para el producto.");
     }
 }
 
-function guardarProductos() {
-    // Almacenar los productos en un array (se puede agregar validación para persistencia)
-    alert("Productos guardados. Continuamos con los comentarios.");
-    mostrarComentarios();
+// Finalizar cotización
+function finalizarCotizacion() {
+    cotizacion.cliente = document.getElementById("cliente").value || 'No proporcionado';
+    cotizacion.rfc = document.getElementById("rfc").value || 'No proporcionado';
+    cotizacion.telefono = document.getElementById("telefono").value || 'No proporcionado';
+    cotizacion.email = document.getElementById("email").value || 'No proporcionado';
+    cotizacion.comentarios = document.getElementById("comentarios").value || 'No hay comentarios adicionales';
+
+    mostrarVistaPrevia();
 }
 
-function mostrarComentarios() {
-    // Mostrar el formulario para comentarios
-    const comentariosHTML = `
-        <h2>Comentarios</h2>
-        <textarea id="comentarios" placeholder="Comentarios adicionales"></textarea><br>
-        <button type="button" onclick="finalizarCotizacion()">Finalizar Cotización</button>
+// Mostrar vista previa
+function mostrarVistaPrevia() {
+    document.getElementById("formulario").style.display = "none";
+    document.getElementById("vista-previa").style.display = "block";
+
+    document.getElementById("vista-cliente").textContent = `
+        ${cotizacion.cliente}, ${cotizacion.rfc}, ${cotizacion.telefono}, ${cotizacion.email}
     `;
 
-    document.getElementById("comentarios").innerHTML = comentariosHTML;
+    let productosHTML = "";
+    cotizacion.productos.forEach((prod, index) => {
+        productosHTML += `<p>${prod.producto} - ${prod.cantidad} x $${prod.precio} = $${prod.total}</p>`;
+    });
+
+    document.getElementById("vista-productos").innerHTML = productosHTML;
+    document.getElementById("vista-comentarios").textContent = cotizacion.comentarios;
 }
 
-function finalizarCotizacion() {
-    // Al finalizar la cotización, se guardan todos los datos de cliente y productos
-    const comentarios = document.getElementById("comentarios").value;
-    const cotizacion = {
-        ...datosCliente,
-        comentarios,
-        // Puedes agregar aquí los productos
-    };
-
-    console.log("Cotización finalizada:", cotizacion);
-    alert("Cotización completada con éxito.");
+// Guardar cotización (en consola o en almacenamiento)
+function guardarCotizacion() {
+    console.log("Cotización guardada:", cotizacion);
+    alert("Cotización guardada exitosamente.");
+    // Aquí podrías guardar la cotización en un archivo, base de datos, o localStorage
 }
