@@ -72,9 +72,16 @@
         </div>
 
         <button onclick="finalizarCotizacion()">Finalizar Cotización</button>
+        <button onclick="mostrarCotizacionesGuardadas()">Ver Cotizaciones Guardadas</button>
     </div>
+    
 
     <div id="vista-previa" class="hidden">
+        <div id="cotizaciones-guardadas" class="hidden">
+    <h2>Cotizaciones Guardadas</h2>
+    <div id="lista-cotizaciones"></div>
+    <button onclick="mostrarFormulario()">Volver</button>
+</div>
         <h2>La Bodeguita 1810</h2>
         <h3 style="text-align: center;">Vista Previa de la Cotización</h3>
         <div style="text-align: justify">
@@ -210,6 +217,54 @@
                 link.click();
             });
         }
+        function mostrarCotizacionesGuardadas() {
+    document.getElementById("formulario").classList.add("hidden");
+    document.getElementById("vista-previa").classList.add("hidden");
+    document.getElementById("cotizaciones-guardadas").classList.remove("hidden");
+
+    const listaDiv = document.getElementById("lista-cotizaciones");
+    listaDiv.innerHTML = "";
+
+    const cotizaciones = JSON.parse(localStorage.getItem("cotizaciones")) || [];
+    if (cotizaciones.length === 0) {
+        listaDiv.innerHTML = "<p>No hay cotizaciones guardadas.</p>";
+        return;
+    }
+
+    cotizaciones.forEach((coti, index) => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+            <p><strong>${coti.nombre}</strong> - ${coti.cliente}</p>
+            <button onclick="cargarCotizacion(${index})">Cargar</button>
+        `;
+        listaDiv.appendChild(div);
+    });
+}
+
+function cargarCotizacion(index) {
+    const cotizaciones = JSON.parse(localStorage.getItem("cotizaciones")) || [];
+    if (cotizaciones[index]) {
+        cotizacion = cotizaciones[index];
+
+        document.getElementById("formulario").classList.add("hidden");
+        document.getElementById("cotizaciones-guardadas").classList.add("hidden");
+        document.getElementById("vista-previa").classList.remove("hidden");
+
+        document.getElementById("vista-nombre-cotizacion").textContent = cotizacion.nombre;
+        document.getElementById("vista-cliente").textContent = cotizacion.cliente;
+        document.getElementById("vista-rfc").textContent = cotizacion.rfc;
+        document.getElementById("vista-telefono").textContent = cotizacion.telefono;
+        document.getElementById("vista-email").textContent = cotizacion.email;
+        document.getElementById("vista-comentarios").textContent = cotizacion.comentarios;
+        actualizarVistaProductos();
+        calcularTotales();
+    }
+}
+
+function mostrarFormulario() {
+    document.getElementById("cotizaciones-guardadas").classList.add("hidden");
+    document.getElementById("formulario").classList.remove("hidden");
+}
     </script>
 </body>
 </html>
