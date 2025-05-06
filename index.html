@@ -1,84 +1,167 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador de Productos</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cotizador de Productos</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <h1>Cotizador de Productos</h1>
-    
-    <div id="formulario">
-        <div class="form-section">
-            <label for="nombre-cotizacion">Nombre de la Cotización</label>
-            <input type="text" id="nombre-cotizacion" placeholder="Ej. Cotización Julio 2025">
-        </div>
-        
-        <div class="form-section">
-            <label for="cliente">Cliente</label>
-            <input type="text" id="cliente" placeholder="Nombre del cliente">
-        </div>
-        
-        <div class="form-section">
-            <label for="rfc">RFC</label>
-            <input type="text" id="rfc" placeholder="RFC del cliente">
-        </div>
-        
-        <div class="form-section">
-            <label for="telefono">Teléfono</label>
-            <input type="text" id="telefono" placeholder="Teléfono del cliente">
-        </div>
-        
-        <div class="form-section">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Email del cliente">
-        </div>
-        
-        <div class="form-section">
-            <label for="producto">Producto</label>
-            <input type="text" id="producto" placeholder="Nombre del producto">
-        </div>
+  <h1>Cotizador de Productos</h1>
+  <div id="formulario">
+    <input type="text" id="nombre-cotizacion" placeholder="Nombre de la cotización" />
+    <input type="text" id="cliente" placeholder="Nombre del cliente" />
+    <input type="text" id="rfc" placeholder="RFC (opcional)" />
+    <input type="text" id="telefono" placeholder="Teléfono (opcional)" />
+    <input type="email" id="email" placeholder="Email (opcional)" />
+    <hr />
+    <div id="productos-container"></div>
+    <button onclick="agregarProducto()">Agregar Producto</button>
+    <hr />
+    <textarea id="comentarios" placeholder="Comentarios adicionales (opcional)"></textarea>
+    <br />
+    <button onclick="finalizarCotizacion()">Vista previa</button>
+  </div>
 
-        <div class="form-section">
-            <label for="cantidad">Cantidad</label>
-            <input type="number" id="cantidad" value="1" min="1">
-        </div>
+  <div id="vista-previa" class="hidden">
+    <h2>Vista Previa</h2>
+    <p><strong>Cotización:</strong> <span id="vista-nombre-cotizacion"></span></p>
+    <p><strong>Cliente:</strong> <span id="vista-cliente"></span></p>
+    <p><strong>RFC:</strong> <span id="vista-rfc"></span></p>
+    <p><strong>Teléfono:</strong> <span id="vista-telefono"></span></p>
+    <p><strong>Email:</strong> <span id="vista-email"></span></p>
+    <h3>Productos</h3>
+    <div id="vista-productos"></div>
+    <p><strong>Total:</strong> $<span id="total"></span></p>
+    <p><strong>Comentarios:</strong> <span id="vista-comentarios"></span></p>
+    <button onclick="guardarCotizacion()">Guardar cotización</button>
+    <button onclick="exportarPDF()">Exportar PDF</button>
+    <button onclick="exportarJPG()">Exportar JPG</button>
+    <button onclick="resetFormulario()">Nuevo</button>
+  </div>
 
-        <div class="form-section">
-            <label for="precio">Precio Unitario</label>
-            <input type="number" id="precio" value="0" min="0">
-        </div>
+  <script>
+    let cotizacion = {
+      nombre: '',
+      cliente: '',
+      rfc: '',
+      telefono: '',
+      email: '',
+      productos: [],
+      comentarios: '',
+      total: 0
+    };
 
-        <button onclick="agregarProducto()">Agregar Producto</button>
+    function agregarProducto() {
+      const container = document.getElementById("productos-container");
 
-        <div class="form-section">
-            <label for="comentarios">Comentarios</label>
-            <textarea id="comentarios" placeholder="Comentarios adicionales"></textarea>
-        </div>
+      const div = document.createElement("div");
+      div.className = "producto";
 
-        <button onclick="finalizarCotizacion()">Finalizar Cotización</button>
-    </div>
-    
-    <div id="vista-previa" class="hidden">
-        <h2>Vista Previa de la Cotización</h2>
-        <p><strong>Nombre de la cotización:</strong> <span id="vista-nombre-cotizacion"></span></p>
-        <p><strong>Cliente:</strong> <span id="vista-cliente"></span></p>
-        <p><strong>RFC:</strong> <span id="vista-rfc"></span></p>
-        <p><strong>Teléfono:</strong> <span id="vista-telefono"></span></p>
-        <p><strong>Email:</strong> <span id="vista-email"></span></p>
+      const nombre = document.createElement("input");
+      nombre.placeholder = "Producto";
+      nombre.className = "producto-nombre";
 
-        <h3>Productos</h3>
-        <div id="vista-productos"></div>
+      const cantidad = document.createElement("input");
+      cantidad.type = "number";
+      cantidad.min = 1;
+      cantidad.value = 1;
+      cantidad.className = "producto-cantidad";
 
-        <p><strong>Comentarios:</strong> <span id="vista-comentarios"></span></p>
-        
-        <button onclick="guardarCotizacion()">Guardar Cotización</button>
-        <button onclick="exportarPDF()">Exportar a PDF</button>
-        <button onclick="exportarJPG()">Exportar a JPG</button>
-        <button onclick="resetFormulario()">Nuevo</button>
-    </div>
+      const precio = document.createElement("input");
+      precio.type = "number";
+      precio.min = 0;
+      precio.value = 0;
+      precio.className = "producto-precio";
 
-    <script src="script.js"></script>
+      div.appendChild(nombre);
+      div.appendChild(cantidad);
+      div.appendChild(precio);
+      container.appendChild(div);
+    }
+
+    function finalizarCotizacion() {
+      cotizacion = {
+        nombre: document.getElementById("nombre-cotizacion").value || "Sin nombre",
+        cliente: document.getElementById("cliente").value || "No proporcionado",
+        rfc: document.getElementById("rfc").value || "No proporcionado",
+        telefono: document.getElementById("telefono").value || "No proporcionado",
+        email: document.getElementById("email").value || "No proporcionado",
+        productos: [],
+        comentarios: document.getElementById("comentarios").value || "Sin comentarios",
+        total: 0
+      };
+
+      const productosDOM = document.querySelectorAll(".producto");
+      let total = 0;
+
+      productosDOM.forEach(p => {
+        const nombre = p.querySelector(".producto-nombre").value;
+        const cantidad = parseFloat(p.querySelector(".producto-cantidad").value);
+        const precio = parseFloat(p.querySelector(".producto-precio").value);
+        const subtotal = cantidad * precio;
+
+        if (nombre && cantidad && precio >= 0) {
+          cotizacion.productos.push({ nombre, cantidad, precio, subtotal });
+          total += subtotal;
+        }
+      });
+
+      cotizacion.total = total;
+
+      document.getElementById("vista-nombre-cotizacion").textContent = cotizacion.nombre;
+      document.getElementById("vista-cliente").textContent = cotizacion.cliente;
+      document.getElementById("vista-rfc").textContent = cotizacion.rfc;
+      document.getElementById("vista-telefono").textContent = cotizacion.telefono;
+      document.getElementById("vista-email").textContent = cotizacion.email;
+      document.getElementById("vista-comentarios").textContent = cotizacion.comentarios;
+      document.getElementById("total").textContent = cotizacion.total.toFixed(2);
+
+      const vistaProductos = document.getElementById("vista-productos");
+      vistaProductos.innerHTML = '';
+      cotizacion.productos.forEach(p => {
+        const el = document.createElement("p");
+        el.textContent = `${p.nombre} - ${p.cantidad} x $${p.precio.toFixed(2)} = $${p.subtotal.toFixed(2)}`;
+        vistaProductos.appendChild(el);
+      });
+
+      document.getElementById("formulario").classList.add("hidden");
+      document.getElementById("vista-previa").classList.remove("hidden");
+    }
+
+    function guardarCotizacion() {
+      const cotizaciones = JSON.parse(localStorage.getItem("cotizaciones")) || [];
+      cotizaciones.push(cotizacion);
+      localStorage.setItem("cotizaciones", JSON.stringify(cotizaciones));
+      alert("Cotización guardada.");
+    }
+
+    function exportarPDF() {
+      const { jsPDF } = window.jspdf;
+      html2canvas(document.getElementById("vista-previa")).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF();
+        const width = pdf.internal.pageSize.getWidth();
+        const height = (canvas.height * width) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+        pdf.save(`${cotizacion.nombre.replace(/\s+/g, "_")}.pdf`);
+      });
+    }
+
+    function exportarJPG() {
+      html2canvas(document.getElementById("vista-previa")).then(canvas => {
+        const link = document.createElement("a");
+        link.download = `${cotizacion.nombre.replace(/\s+/g, "_")}.jpg`;
+        link.href = canvas.toDataURL("image/jpeg");
+        link.click();
+      });
+    }
+
+    function resetFormulario() {
+      location.reload();
+    }
+  </script>
 </body>
 </html>
