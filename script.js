@@ -1,6 +1,10 @@
 let productos = [];
 let iva = 0;
 
+window.onload = function() {
+    cargarCotizacionesGuardadas();
+};
+
 function agregarProducto() {
     const producto = document.getElementById("producto").value;
     const cantidad = document.getElementById("cantidad").value;
@@ -71,7 +75,48 @@ function cerrarVistaPrevia() {
 function guardarCotizacion() {
     const nombreArchivo = document.getElementById("nombre-archivo").value || "cotizacion";
 
-    // Llamar a una función para generar el PDF o JPG
-    alert(`Generando cotización como ${nombreArchivo}.pdf`);
-    // Aquí se puede integrar la función para guardar el archivo (PDF/JPG)
+    // Guardar cotización en localStorage
+    const cotizacion = {
+        cliente: document.getElementById("cliente").value,
+        rfc: document.getElementById("rfc").value,
+        telefono: document.getElementById("telefono").value,
+        email: document.getElementById("email").value,
+        productos: productos,
+        comentarios: document.getElementById("comentarios").value,
+        iva: document.getElementById("iva").checked,
+        total: productos.reduce((acc, p) => acc + p.total, 0),
+        ivaTotal: iva,
+    };
+
+    let cotizacionesGuardadas = JSON.parse(localStorage.getItem("cotizaciones")) || [];
+    cotizacionesGuardadas.push(cotizacion);
+    localStorage.setItem("cotizaciones", JSON.stringify(cotizacionesGuardadas));
+
+    alert(`Cotización guardada como ${nombreArchivo}`);
+    cargarCotizacionesGuardadas();
+}
+
+function cargarCotizacionesGuardadas() {
+    const cotizacionesGuardadas = JSON.parse(localStorage.getItem("cotizaciones")) || [];
+    const listaCotizaciones = document.getElementById("cotizaciones-guardadas");
+    listaCotizaciones.innerHTML = '';
+
+    cotizacionesGuardadas.forEach((cotizacion, index) => {
+        const li = document.createElement("li");
+        li.textContent = `Cotización para ${cotizacion.cliente} - Total: $${cotizacion.total.toFixed(2)}`;
+        const btnEliminar = document.createElement("button");
+        btnEliminar.textContent = "Eliminar";
+        btnEliminar.onclick = () => eliminarCotizacion(index);
+
+        li.appendChild(btnEliminar);
+        listaCotizaciones.appendChild(li);
+    });
+}
+
+function eliminarCotizacion(index) {
+    let cotizacionesGuardadas = JSON.parse(localStorage.getItem("cotizaciones"));
+    cotizacionesGuardadas.splice(index, 1);
+    localStorage.setItem("cotizaciones", JSON.stringify(cotizacionesGuardadas));
+
+    cargarCotizacionesGuardadas();
 }
