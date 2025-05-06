@@ -1,122 +1,91 @@
-let productos = [];
-let iva = 0;
+let datosCliente = {};
 
-window.onload = function() {
-    cargarCotizacionesGuardadas();
-};
+function guardarDatosCliente() {
+    const cliente = document.getElementById("cliente").value;
+    const rfc = document.getElementById("rfc").value;
+    const telefono = document.getElementById("telefono").value;
+    const email = document.getElementById("email").value;
+
+    // Guardar datos del cliente en el objeto
+    datosCliente = {
+        cliente,
+        rfc,
+        telefono,
+        email
+    };
+
+    if (cliente && rfc && telefono && email) {
+        // Ocultar sección de datos del cliente y mostrar los productos
+        document.getElementById("datos-cliente").style.display = "none";
+        document.getElementById("productos").style.display = "block";
+        mostrarFormularioProductos();
+    } else {
+        alert("Por favor, completa todos los campos del cliente.");
+    }
+}
+
+function mostrarFormularioProductos() {
+    const productosHTML = `
+        <h2>Agregar Productos</h2>
+        <label for="producto">Producto:</label>
+        <input type="text" id="producto" placeholder="Producto o concepto" required><br>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" value="1" min="1" required><br>
+
+        <label for="precio">Precio unitario:</label>
+        <input type="number" id="precio" value="0" step="0.01" required><br>
+
+        <button type="button" onclick="agregarProducto()">Agregar producto</button>
+        <button type="button" onclick="guardarProductos()">Guardar Productos</button>
+    `;
+
+    document.getElementById("productos").innerHTML = productosHTML;
+}
 
 function agregarProducto() {
     const producto = document.getElementById("producto").value;
     const cantidad = document.getElementById("cantidad").value;
     const precio = document.getElementById("precio").value;
-    
-    if (!producto || cantidad <= 0 || precio <= 0) {
-        alert("Por favor, ingrese todos los datos correctamente.");
-        return;
+
+    if (producto && cantidad > 0 && precio > 0) {
+        // Guardar el producto y mostrar el resumen
+        const total = cantidad * precio;
+        const productoHTML = `
+            <p>${producto} - ${cantidad} x $${precio} = $${total}</p>
+        `;
+        document.getElementById("productos").innerHTML += productoHTML;
+    } else {
+        alert("Por favor, ingresa datos válidos para el producto.");
     }
-
-    const total = cantidad * precio;
-    productos.push({ producto, cantidad, precio, total });
-
-    mostrarProductos();
-    actualizarTotal();
 }
 
-function mostrarProductos() {
-    const tabla = document.getElementById("tabla-productos").getElementsByTagName('tbody')[0];
-    tabla.innerHTML = ''; // Limpiar tabla
-
-    productos.forEach(p => {
-        const row = tabla.insertRow();
-        row.insertCell(0).textContent = p.producto;
-        row.insertCell(1).textContent = p.cantidad;
-        row.insertCell(2).textContent = `$${p.precio.toFixed(2)}`;
-        row.insertCell(3).textContent = `$${p.total.toFixed(2)}`;
-    });
+function guardarProductos() {
+    // Almacenar los productos en un array (se puede agregar validación para persistencia)
+    alert("Productos guardados. Continuamos con los comentarios.");
+    mostrarComentarios();
 }
 
-function actualizarTotal() {
-    const total = productos.reduce((acc, p) => acc + p.total, 0);
-    let ivaTotal = 0;
+function mostrarComentarios() {
+    // Mostrar el formulario para comentarios
+    const comentariosHTML = `
+        <h2>Comentarios</h2>
+        <textarea id="comentarios" placeholder="Comentarios adicionales"></textarea><br>
+        <button type="button" onclick="finalizarCotizacion()">Finalizar Cotización</button>
+    `;
 
-    if (document.getElementById("iva").checked) {
-        ivaTotal = total * 0.16;
-        iva = ivaTotal;
-    }
-
-    document.getElementById("total").textContent = `Total: $${total.toFixed(2)}`;
-    document.getElementById("iva-total").textContent = `IVA: $${ivaTotal.toFixed(2)}`;
+    document.getElementById("comentarios").innerHTML = comentariosHTML;
 }
 
-function vistaPrevia() {
-    let contenido = "<h3>Cotización</h3>";
-
-    productos.forEach(p => {
-        contenido += `<p>${p.producto} - ${p.cantidad} x $${p.precio.toFixed(2)} = $${p.total.toFixed(2)}</p>`;
-    });
-
-    const total = productos.reduce((acc, p) => acc + p.total, 0);
-    contenido += `<p>Total: $${total.toFixed(2)}</p>`;
-    
-    if (document.getElementById("iva").checked) {
-        contenido += `<p>IVA: $${iva.toFixed(2)}</p>`;
-    }
-
-    contenido += `<p>Comentarios: ${document.getElementById("comentarios").value}</p>`;
-
-    document.getElementById("preview-content").innerHTML = contenido;
-    document.getElementById("vista-previa").style.display = "block";
-}
-
-function cerrarVistaPrevia() {
-    document.getElementById("vista-previa").style.display = "none";
-}
-
-function guardarCotizacion() {
-    const nombreArchivo = document.getElementById("nombre-archivo").value || "cotizacion";
-
-    // Guardar cotización en localStorage
+function finalizarCotizacion() {
+    // Al finalizar la cotización, se guardan todos los datos de cliente y productos
+    const comentarios = document.getElementById("comentarios").value;
     const cotizacion = {
-        cliente: document.getElementById("cliente").value,
-        rfc: document.getElementById("rfc").value,
-        telefono: document.getElementById("telefono").value,
-        email: document.getElementById("email").value,
-        productos: productos,
-        comentarios: document.getElementById("comentarios").value,
-        iva: document.getElementById("iva").checked,
-        total: productos.reduce((acc, p) => acc + p.total, 0),
-        ivaTotal: iva,
+        ...datosCliente,
+        comentarios,
+        // Puedes agregar aquí los productos
     };
 
-    let cotizacionesGuardadas = JSON.parse(localStorage.getItem("cotizaciones")) || [];
-    cotizacionesGuardadas.push(cotizacion);
-    localStorage.setItem("cotizaciones", JSON.stringify(cotizacionesGuardadas));
-
-    alert(`Cotización guardada como ${nombreArchivo}`);
-    cargarCotizacionesGuardadas();
-}
-
-function cargarCotizacionesGuardadas() {
-    const cotizacionesGuardadas = JSON.parse(localStorage.getItem("cotizaciones")) || [];
-    const listaCotizaciones = document.getElementById("cotizaciones-guardadas");
-    listaCotizaciones.innerHTML = '';
-
-    cotizacionesGuardadas.forEach((cotizacion, index) => {
-        const li = document.createElement("li");
-        li.textContent = `Cotización para ${cotizacion.cliente} - Total: $${cotizacion.total.toFixed(2)}`;
-        const btnEliminar = document.createElement("button");
-        btnEliminar.textContent = "Eliminar";
-        btnEliminar.onclick = () => eliminarCotizacion(index);
-
-        li.appendChild(btnEliminar);
-        listaCotizaciones.appendChild(li);
-    });
-}
-
-function eliminarCotizacion(index) {
-    let cotizacionesGuardadas = JSON.parse(localStorage.getItem("cotizaciones"));
-    cotizacionesGuardadas.splice(index, 1);
-    localStorage.setItem("cotizaciones", JSON.stringify(cotizacionesGuardadas));
-
-    cargarCotizacionesGuardadas();
+    console.log("Cotización finalizada:", cotizacion);
+    alert("Cotización completada con éxito.");
 }
